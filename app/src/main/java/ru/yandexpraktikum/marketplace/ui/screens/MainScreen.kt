@@ -143,21 +143,25 @@ fun ProductCard(
     onClick: () -> Unit,
     onAddToCart: () -> Unit
 ) {
+
     val actionLabel = stringResource(R.string.add_product_to_cart, product.name)
+    val customActionsList = remember {
+        listOf(
+            CustomAccessibilityAction(
+                label = actionLabel,
+                action = {
+                    onAddToCart()
+                    true
+                }
+            )
+        )
+    }
 
     Card(
         modifier = modifier
             .fillMaxWidth()
             .semantics {
-                customActions = listOf(
-                    CustomAccessibilityAction(
-                        label = actionLabel,
-                        action = {
-                            onAddToCart()
-                            true
-                        }
-                    )
-                )
+                customActions = customActionsList
             }
     ) {
         Column {
@@ -203,7 +207,6 @@ fun ProductCard(
                 Icon(
                     Icons.Default.ShoppingCart,
                     contentDescription = stringResource(R.string.add_to_cart),
-                    tint = Color(0xFFAAAAAA),
                     modifier = Modifier
                         .clickable(
                             onClickLabel = actionDescription
