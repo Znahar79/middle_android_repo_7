@@ -40,7 +40,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -98,8 +100,7 @@ fun MainScreen(onProductClick: (Int) -> Unit) {
                         modifier = Modifier.semantics {
                             contentDescription = searchBarDescription
                         },
-                        text = stringResource(R.string.search_products),
-                        color = Color(0xFFAAAAAA)
+                        text = stringResource(R.string.search_products)
                     )
                 },
                 modifier = Modifier
@@ -142,11 +143,21 @@ fun ProductCard(
     onClick: () -> Unit,
     onAddToCart: () -> Unit
 ) {
+    val actionLabel = stringResource(R.string.add_product_to_cart, product.name)
+
     Card(
         modifier = modifier
             .fillMaxWidth()
             .semantics {
-                //
+                customActions = listOf(
+                    CustomAccessibilityAction(
+                        label = actionLabel,
+                        action = {
+                            onAddToCart()
+                            true
+                        }
+                    )
+                )
             }
     ) {
         Column {
@@ -178,14 +189,12 @@ fun ProductCard(
                         text = product.name,
                         style = MaterialTheme.typography.titleMedium,
                         maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        color = Color(0xFFAAAAAA)
+                        overflow = TextOverflow.Ellipsis
                     )
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
                         text = stringResource(R.string.price_format, product.price),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = Color(0xFFAAAAAA)
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 }
 
